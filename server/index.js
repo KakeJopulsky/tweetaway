@@ -1,4 +1,4 @@
-const { insert, remove, getOne, getAll } = require('../database/db.js');
+// const { insert, remove, getOne, getAll } = require('../database/db.js');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -22,7 +22,7 @@ app.listen(3000, () => console.log('Example app listening on port 3000!'));
 // ROUTES
 app.get('/user', (req, res) => {  // Check session data to see if user is logged in
   req.session.passport
-    ? res.send(true)
+    ? res.send(req.session.passport.user)
     : res.send(false);
 });
 app.post('/post', (req, res) => { // Save a tweet to db
@@ -41,12 +41,20 @@ app.get('/auth/twitter/callback',
     successRedirect: '/' }
 ));
 
-passport.serializeUser((user, done) => done(null, user.id));
-passport.deserializeUser((user, done) => done(null, user.id));
+passport.serializeUser(({ id, username, displayName, photos }, done) => {
+  done(null, { id, username, displayName, photo: photos[0].value } )
+});
+
+passport.deserializeUser(({ id, username, displayName, photos }, done) => {
+  done(null, { id, username, displayName, photo: photos[0].value } )
+});
 
 passport.use(new TwitterStrategy({
   consumerKey: process.env.CONSUMER_KEY,
   consumerSecret: process.env.CONSUMER_SECRET,
   callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
-}, (token, tokenSecret, profile , cb) => cb(null, profile)
+}, (token, tokenSecret, profile , cb) => {
+  //console.log(profile);
+  cb(null, profile)
+}
 ));
