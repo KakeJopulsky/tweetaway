@@ -8,6 +8,46 @@
   align-items: center;
 }
 
-.container {
-  border: 1px dotted red;
+.tweet-container {
+  border: 1px solid black;
+}
+
+.profile-container {
+  width: 600px;
+  border: 1px solid red;
+  display: flex;
+  font-size: 14px;
+}
+
+.profile-photo-container {
+  padding-right: 10px;
+}
+
+.profile-photo {
+  border-radius: 50%;
+}
+
+.profile-display-name {
+  line-height: 20px;
+  font-weight: 600;
+  padding-right: 5px;
+}
+
+.profile-username {
+  line-height: 20px;
+}
+
+.tweet-entry {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-container button {
+  height: 30px;
+  width: 100px;
 }

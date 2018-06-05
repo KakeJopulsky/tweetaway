@@ -17,7 +17,7 @@ app.use(session({
 }));
 
 app.use('/', express.static(path.join(__dirname, '../dist')));
-app.listen(3000, () => console.log('Example app listening on port 3000!'));
+app.listen(3000, () => console.log('Sup dogs we\'re listening on port 3000!'));
 
 // ROUTES
 app.get('/user', (req, res) => {  // Check session data to see if user is logged in
@@ -53,8 +53,4 @@ passport.use(new TwitterStrategy({
   consumerKey: process.env.CONSUMER_KEY,
   consumerSecret: process.env.CONSUMER_SECRET,
   callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
-}, (token, tokenSecret, profile , cb) => {
-  //console.log(profile);
-  cb(null, profile)
-}
-));
+}, (token, tokenSecret, profile , cb) => cb(null, profile)));

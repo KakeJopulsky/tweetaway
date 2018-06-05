@@ -1,4 +1,5 @@
 import React from 'react';
+import Tweet from './tweet.jsx';
 import axios from 'axios';
 
 class App extends React.Component {
@@ -6,12 +7,12 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
-			isLoggedIn: false
+			isLoggedIn: true
     }
 	}
 
 	componentDidMount() {
-    this.isLoggedIn();
+    //this.isLoggedIn();
   }
   
   isLoggedIn() {
@@ -24,7 +25,7 @@ class App extends React.Component {
 		const isLoggedIn = this.state.isLoggedIn;
 		return (
 			<div className="container">
-				{isLoggedIn ? (<div>Logged in!</div>) : (<div><a href="/auth/twitter">Log In with OAuth Provider</a></div>)}
+				{isLoggedIn ? (<Tweet user={this.state.isLoggedIn}/>) : (<div><a href="/auth/twitter">Log In with OAuth Provider</a></div>)}
 			</div>
 		)
 	}
