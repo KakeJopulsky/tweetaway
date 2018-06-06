@@ -1,4 +1,4 @@
-// const { insert, remove, getOne, getAll } = require('../database/db.js');
+const { insert, remove, getOne, getAll } = require('../database/db.js');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -7,9 +7,9 @@ const express = require('express');
 const path  = require('path');
 require('dotenv').config();
 const app = express();
-app.use(bodyParser());
 
-// Session middleware
+// middleware
+app.use(bodyParser.json())
 app.use(session({
   secret: 'keyboard cat',
   resave: true,
@@ -26,9 +26,11 @@ app.get('/user', (req, res) => {  // Check session data to see if user is logged
     ? res.send(req.session.passport.user)
     : res.send(false);
 });
-app.post('/tweet', (req, res) => { // Save a tweet to db
-  console.log(req.body);
-  res.send('Got a POST request')
+
+app.post('/tweet', ({ body }, res) => { // Save a tweet to db
+  insert(body, (res) => console.log(res._id));
+  // Send back res._id to client incase they edit queued tweets
+  res.sendStatus(200);
 });
 
 // PassportJS Authentification

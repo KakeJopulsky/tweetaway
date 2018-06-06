@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/tweetlater');
+
 const db = mongoose.connection;
 
 const tweetSchema = mongoose.Schema({
@@ -25,6 +26,16 @@ const tweetSchema = mongoose.Schema({
   },
 });
 
+/*
+  let test = {
+    user: 'Test',
+    message: 'Testing 123',
+    date: '12345',
+    token: '12121212121',
+    token_secret: '0000'
+  }
+*/
+
 const Tweet = mongoose.model('Tweet', tweetSchema);
 
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -33,12 +44,12 @@ db.once('open', () => {
 });
 
 // OPERATIONS
+mongoose.Promise = Promise;
 
-module.exports.insert = (tweetObj, cb) => {
-  Tweet.create(tweetObj, (err, entry) => {
-    if (err) return cb(err, null);
-    cb(null, entry._id);
-  });
+module.exports.insert = (tweet, cb) => {
+  Tweet.create(tweet)
+    .then(res => cb(res))
+    .catch(err => console.log(err))
 };
 
 module.exports.remove = (id) => {
