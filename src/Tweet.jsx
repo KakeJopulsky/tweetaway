@@ -17,7 +17,7 @@ const Tweet = (props) => {
         <textarea rows="10" cols="55" style={{ resize: "none", "font-size": "18px" }} value={props.textValue} onChange={e => props.input(e)}> </textarea>
       </div>
       <div className="submit-container">
-        <span>360</span>
+        <span>{280 - (props.textValue.length)}</span>
         <button type="submit" onClick={props.submit}></button>
       </div>
     </div>
