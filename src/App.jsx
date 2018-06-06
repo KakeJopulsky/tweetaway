@@ -10,6 +10,7 @@ class App extends React.Component {
       isLoggedIn: false,
       inputText: '',
       charCount: 280,
+      date: Date.now()
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleInput = this.handleInput.bind(this);
@@ -32,6 +33,10 @@ class App extends React.Component {
   };
 
   handleInput() {
+    axios.post('/tweet', { message: this.state.inputText, time: this.state.date })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+
     this.setState({
       inputText: ''
     })

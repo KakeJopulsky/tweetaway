@@ -7,6 +7,7 @@ const express = require('express');
 const path  = require('path');
 require('dotenv').config();
 const app = express();
+app.use(bodyParser());
 
 // Session middleware
 app.use(session({
@@ -25,7 +26,8 @@ app.get('/user', (req, res) => {  // Check session data to see if user is logged
     ? res.send(req.session.passport.user)
     : res.send(false);
 });
-app.post('/post', (req, res) => { // Save a tweet to db
+app.post('/tweet', (req, res) => { // Save a tweet to db
+  console.log(req.body);
   res.send('Got a POST request')
 });
 
