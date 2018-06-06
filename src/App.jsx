@@ -7,12 +7,16 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
-			isLoggedIn: true
+      isLoggedIn: false,
+      inputText: '',
+      charCount: 280,
     }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleInput = this.handleInput.bind(this);
 	}
 
 	componentDidMount() {
-    //this.isLoggedIn();
+    this.isLoggedIn();
   }
   
   isLoggedIn() {
@@ -21,11 +25,26 @@ class App extends React.Component {
       .catch((err) => console.log(err))
   };
 
+  handleChange(e) {
+    this.setState({
+      inputText: e.target.value
+    })
+  };
+
+  handleInput() {
+    this.setState({
+      inputText: ''
+    })
+  };
+
 	render() {
 		const isLoggedIn = this.state.isLoggedIn;
 		return (
 			<div className="container">
-				{isLoggedIn ? (<Tweet user={this.state.isLoggedIn}/>) : (<div><a href="/auth/twitter">Log In with OAuth Provider</a></div>)}
+        {isLoggedIn 
+          ? (<Tweet user={this.state.isLoggedIn} input={this.handleChange} submit={this.handleInput} textValue={this.state.inputText}/>)
+          : (<div><a href="/auth/twitter">Log In with OAuth Provider</a></div>)
+        }
 			</div>
 		)
 	}
