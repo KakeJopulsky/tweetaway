@@ -28,7 +28,17 @@ app.get('/user', (req, res) => {  // Check session data to see if user is logged
     : res.send(false);
 });
 
-app.post('/post/tweet', ({ body: { message, date } }, res) => { // Save a tweet to db
+app.post('/post/tweet', (req, res) => { // Save a tweet to db
+  let { message, date } = req.body;
+  let { username, token, tokenSecret } = req.session.passport.user;
+  let newTweet = {
+    user: username,
+    message: message,
+    date: date,
+    token: token,
+    token_secret: tokenSecret
+  };
+  console.log(newTweet);
   // insert(body, (res) => console.log(res._id));
   // Send back res._id to client incase they edit queued tweets
   res.sendStatus(200);
@@ -51,19 +61,23 @@ app.get('/auth/twitter/callback',
     successRedirect: '/' }
 ));
 
-passport.serializeUser(({ id, username, displayName, photos }, done) => {
-  done(null, { id, username, displayName, photo: photos[0].value } )
+passport.serializeUser((user, done) => {
+  let { id, username, displayName, photos } = user.profile;
+  let { token, tokenSecret } = user;
+  done(null, { id, username, displayName, photo: photos[0].value, token, tokenSecret } )
 });
 
-passport.deserializeUser(({ id, username, displayName, photos }, done) => {
-  done(null, { id, username, displayName, photo: photos[0].value } )
+passport.deserializeUser((user, done) => {
+  let { id, username, displayName, photos } = user.profile;
+  let { token, tokenSecret } = user;
+  done(null, { id, username, displayName, photo: photos[0].value, token, tokenSecret } )
 });
 
 passport.use(new TwitterStrategy({
   consumerKey: process.env.CONSUMER_KEY,
   consumerSecret: process.env.CONSUMER_SECRET,
   callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
-}, (token, tokenSecret, profile , cb) => cb(null, profile)));
+}, (token, tokenSecret, profile , cb) => cb(null, { profile: profile, token: token, tokenSecret: tokenSecret })));
 
 
 /*

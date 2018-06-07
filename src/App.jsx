@@ -9,7 +9,7 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
-      isLoggedIn: true,
+      isLoggedIn: false,
       inputText: '',
       charCount: 280,
       date: Date.now(),
@@ -19,7 +19,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-    //this.isAuthenticated();
+    this.isAuthenticated();
   }
   
   isAuthenticated() {
