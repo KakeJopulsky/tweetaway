@@ -16,8 +16,10 @@ class App extends React.Component {
       tweets: null,
       editMode: false,
       edittedTweetID: null,
+      key: 1,
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.handleDate = this.handleDate.bind(this);
     this.postTweet = this.postTweet.bind(this);
     this.editTweet = this.editTweet.bind(this);
@@ -65,10 +67,17 @@ class App extends React.Component {
   };
 
   editTweet(tweet) {
-    console.log(tweet);
-    this.setState({ editMode: true, inputText: tweet.message, edittedTweetID: tweet._id })
-    // this.setState({ editMode: true, inputText: tweet.message })
+    this.setState({ 
+      editMode: true,
+      inputText: tweet.message,
+      edittedTweetID: tweet._id,
+      key: 1 
+    });
     // if true, have some flag in <Tweet /> notifying user
+  }
+
+  handleSelect(key) {
+    this.setState({ key: key })
   }
 
 	render() {
@@ -78,7 +87,8 @@ class App extends React.Component {
 			<div className="container">
         {isLoggedIn 
           ? (
-              <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example">
+              // <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example">
+              <Tabs activeKey={this.state.key} onSelect={this.handleSelect} animation={false} >
                 <Tab eventKey={1} title="Tweet">
                   <Tweet user={this.state.isLoggedIn}
                         input={this.handleChange} 
