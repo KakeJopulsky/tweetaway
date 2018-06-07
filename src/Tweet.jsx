@@ -6,6 +6,7 @@ const Tweet = (props) => {
 
   return (
     <div className="tweet-container">
+
       <div className="profile-container">
         <div className="profile-photo-container">
           <img className="profile-photo" src={photo}></img>
@@ -13,6 +14,7 @@ const Tweet = (props) => {
           <span className="profile-display-name"> {displayName} </span>
           <span className="profile-username"> @{username} </span>
       </div>
+
       <div className="tweet-entry">
         <textarea rows="10" cols="55" style={{ resize: "none", "font-size": "18px" }} value={props.textValue} onChange={e => props.input(e)}> </textarea>
       </div>
@@ -20,6 +22,7 @@ const Tweet = (props) => {
         <span>{280 - (props.textValue.length)}</span>
         <button type="submit" onClick={props.submit}></button>
       </div>
+
     </div>
   )
 }

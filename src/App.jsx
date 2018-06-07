@@ -1,13 +1,14 @@
 import React from 'react';
 import Tweet from './tweet.jsx';
 import axios from 'axios';
+import { Tab, Tabs } from 'react-bootstrap';
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-      isLoggedIn: false,
+      isLoggedIn: true,
       inputText: '',
       charCount: 280,
       date: Date.now()
@@ -17,10 +18,10 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-    this.isLoggedIn();
+    this.isAuthenticated();
   }
   
-  isLoggedIn() {
+  isAuthenticated() {
     axios.get('/user')
       .then(({ data }) => this.setState({ isLoggedIn: data }))
       .catch((err) => console.log(err))
@@ -33,7 +34,7 @@ class App extends React.Component {
   };
 
   handleInput() {
-    axios.post('/tweet', { message: this.state.inputText, time: this.state.date })
+    axios.post('/post/tweet', { message: this.state.inputText, time: this.state.date })
       .then((res) => console.log(res))
       .catch((err) => console.log(err))
 
@@ -46,8 +47,12 @@ class App extends React.Component {
 		const isLoggedIn = this.state.isLoggedIn;
 		return (
 			<div className="container">
+      
         {isLoggedIn 
-          ? (<Tweet user={this.state.isLoggedIn} input={this.handleChange} submit={this.handleInput} textValue={this.state.inputText}/>)
+          ? (
+              <Tweet user={this.state.isLoggedIn} input={this.handleChange} submit={this.handleInput} textValue={this.state.inputText} />
+            )
+          
           : (<div><a href="/auth/twitter">Log In with OAuth Provider</a></div>)
         }
 			</div>

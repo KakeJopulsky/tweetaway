@@ -54,7 +54,7 @@ module.exports.insert = (tweet, cb) => {
 
 module.exports.remove = (id) => {
   Tweet.findById(id).remove().exec();
-  console.log('removed from db');
+  console.log('deleted from db');
 };
 
 module.exports.getOne = (id, cb) => {
@@ -64,8 +64,9 @@ module.exports.getOne = (id, cb) => {
   });
 };
 
-module.exports.getAll = (cb) => {
-  Tweet.find({}, (err, res) => {
+// Get all tweets from select user
+module.exports.getAll = (userID, cb) => {
+  Tweet.find(userID, (err, res) => {
     if (err) return cb(err, null);
     return cb(null, res);
   });
