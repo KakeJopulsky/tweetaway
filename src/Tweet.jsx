@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+// import { Tab, Tabs, TabContainer, TabContent, TabPane } from 'react-bootstrap';
 
 // const Tweet = (props, { user: { displayName, username, photo  }}) => (
 const Tweet = (props) => {
@@ -6,7 +7,6 @@ const Tweet = (props) => {
 
   return (
     <div className="tweet-container">
-
       <div className="profile-container">
         <div className="profile-photo-container">
           <img className="profile-photo" src={photo}></img>
@@ -22,7 +22,6 @@ const Tweet = (props) => {
         <span>{280 - (props.textValue.length)}</span>
         <button type="submit" onClick={props.submit}></button>
       </div>
-
     </div>
   )
 }

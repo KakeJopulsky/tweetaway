@@ -3,6 +3,7 @@
   border: 1px dotted red;
   display: flex;
   justify-content: center;
+  /* height: 300px; */
 }
 
 #app {

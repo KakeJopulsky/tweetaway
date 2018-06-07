@@ -8,10 +8,10 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
-      isLoggedIn: true,
+      isLoggedIn: false,
       inputText: '',
       charCount: 280,
-      date: Date.now()
+      date: Date.now(),
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleInput = this.handleInput.bind(this);
@@ -47,7 +47,6 @@ class App extends React.Component {
 		const isLoggedIn = this.state.isLoggedIn;
 		return (
 			<div className="container">
-      
         {isLoggedIn 
           ? (
               <Tweet user={this.state.isLoggedIn} input={this.handleChange} submit={this.handleInput} textValue={this.state.inputText} />
