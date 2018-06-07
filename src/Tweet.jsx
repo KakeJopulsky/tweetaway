@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
-// import { Tab, Tabs, TabContainer, TabContent, TabPane } from 'react-bootstrap';
+import React from 'react';
 
-// const Tweet = (props, { user: { displayName, username, photo  }}) => (
 const Tweet = (props) => {
   const { displayName, username, photo } = props.user;
 

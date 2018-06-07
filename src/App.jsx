@@ -1,14 +1,15 @@
 import React from 'react';
 import Tweet from './tweet.jsx';
+import Queue from './Queue.jsx';
 import axios from 'axios';
-import { Tab, Tabs } from 'react-bootstrap';
+import { Tab, Tabs, TabContent } from 'react-bootstrap';
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-      isLoggedIn: false,
+      isLoggedIn: true,
       inputText: '',
       charCount: 280,
       date: Date.now(),
@@ -18,7 +19,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-    this.isAuthenticated();
+    //this.isAuthenticated();
   }
   
   isAuthenticated() {
@@ -49,7 +50,14 @@ class App extends React.Component {
 			<div className="container">
         {isLoggedIn 
           ? (
-              <Tweet user={this.state.isLoggedIn} input={this.handleChange} submit={this.handleInput} textValue={this.state.inputText} />
+              <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example">
+                <Tab eventKey={1} title="Tweet">
+                <Tweet user={this.state.isLoggedIn} input={this.handleChange} submit={this.handleInput} textValue={this.state.inputText} />
+                </Tab>
+                <Tab eventKey={2} title="Queue">
+                  <Queue />
+                </Tab>
+              </Tabs>
             )
           
           : (<div><a href="/auth/twitter">Log In with OAuth Provider</a></div>)
