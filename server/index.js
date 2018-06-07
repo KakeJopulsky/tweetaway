@@ -21,11 +21,17 @@ app.use('/', express.static(path.join(__dirname, '../dist')));
 app.listen(3000, () => console.log('Sup dogs we\'re listening on port 3000!'));
 
 // ROUTES
-app.get('/user', (req, res) => {  // Check session data to see if user is logged in
-  // console.log(req.session.passport);
-  req.session.passport
-    ? res.send(req.session.passport.user)
-    : res.send(false);
+app.get('/user', (req, res) => {
+  // Check session data to see if user is logged in
+  // If so, return al tweets from user
+  if(req.session.passport) {
+    let { username } = req.session.passport.user;
+    getAll(username, (tweets) => {
+      res.send({ user: req.session.passport.user, tweets: tweets });
+    })
+  } else {
+    res.send(false);
+  }
 });
 
 app.post('/post/tweet', (req, res) => { // Save a tweet to db
@@ -38,15 +44,15 @@ app.post('/post/tweet', (req, res) => { // Save a tweet to db
     token: token,
     token_secret: tokenSecret
   };
-  console.log(newTweet);
-  // insert(body, (res) => console.log(res._id));
-  // Send back res._id to client incase they edit queued tweets
+  insert(newTweet, (res) => console.log(res._id));
+  //Send back res._id to client incase they edit queued tweets
   res.sendStatus(200);
 });
 
 app.get('/get/tweets', (req, res) => {
-  // return all tweets from user from db
-  console.log(req.session.passport.user);
+  // Returns all tweets from user
+  let { username } = req.session.passport.user;
+  getAll(username, (userTweets) => res.send(userTweets));
 });
 
 // PassportJS Authentification
@@ -78,12 +84,3 @@ passport.use(new TwitterStrategy({
   consumerSecret: process.env.CONSUMER_SECRET,
   callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
 }, (token, tokenSecret, profile , cb) => cb(null, { profile: profile, token: token, tokenSecret: tokenSecret })));
-
-
-/*
-  Each tweet sent back will have an _id attached to it.
-  That should make editing, deleting possible. 
-  Checking if user isLoggedIn will be GET req to /user route
-  TODO:
-  return all tweets from user to client
-*/

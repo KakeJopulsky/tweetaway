@@ -5,7 +5,7 @@ let editDelete = {
   'text-align': 'center'
 }
 
-const Queue = () => {
+const Queue = (props) => {
 
   return (
     <div className="queue-container">
@@ -19,13 +19,15 @@ const Queue = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Mark</td>
-            <td>Otto</td>
+          {props.tweets.map((tweet, i) => (
+            <tr>
+            <td>{i}</td>
+            <td>{tweet.message}</td>
+            <td>{tweet.date}</td>
             <td><Button bsStyle="warning">Edit</Button></td>
             <td><Button bsStyle="danger">Delete</Button></td>
           </tr>
+          ))}
         </tbody>
       </Table>
     </div>

@@ -1,4 +1,6 @@
 import React from 'react';
+import Datetime from 'react-datetime';
+require('react-datetime');
 
 const Tweet = (props) => {
   const { displayName, username, photo } = props.user;
@@ -12,8 +14,9 @@ const Tweet = (props) => {
           <span className="profile-display-name"> {displayName} </span>
           <span className="profile-username"> @{username} </span>
       </div>
-
+      
       <div className="tweet-entry">
+      <Datetime onChange={props.handleDate}/>
         <textarea rows="10" cols="55" style={{ resize: "none", "font-size": "18px" }} value={props.textValue} onChange={e => props.input(e)}> </textarea>
       </div>
       <div className="submit-container">

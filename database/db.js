@@ -65,9 +65,8 @@ module.exports.getOne = (id, cb) => {
 };
 
 // Get all tweets from select user
-module.exports.getAll = (userID, cb) => {
-  Tweet.find(userID, (err, res) => {
-    if (err) return cb(err, null);
-    return cb(null, res);
-  });
+module.exports.getAll = (username, cb) => {
+  Tweet.find({ user: username })
+    .then(tweets => cb(tweets))
+    .catch(err => console.log(err))
 };
