@@ -1,4 +1,4 @@
-const { insert, remove, getOne, getAll } = require('../database/db.js');
+const { insert, remove, findAndUpdate, getAll } = require('../database/db.js');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -54,6 +54,12 @@ app.get('/get/tweets', (req, res) => {
   let { username } = req.session.passport.user;
   getAll(username, (userTweets) => res.send(userTweets));
 });
+
+app.post('/update', (req, res) => {
+  let { id, message, date } = req.body;
+  findAndUpdate(id, { message: message, date: date }, (res) => console.log(res));
+  res.sendStatus(200);
+})
 
 // PassportJS Authentification
 app.use(passport.initialize());

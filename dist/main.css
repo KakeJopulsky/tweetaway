@@ -69,3 +69,9 @@
   height: 30px;
   width: 100px;
 }
+
+.old-text {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 300px;
+}

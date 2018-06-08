@@ -18,11 +18,12 @@ class App extends React.Component {
       edittedTweetID: null,
       key: 1,
     }
+    this.findOneAndUpdate = this.findOneAndUpdate.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleDate = this.handleDate.bind(this);
     this.postTweet = this.postTweet.bind(this);
-    this.editTweet = this.editTweet.bind(this);
+    this.editMode = this.editMode.bind(this);
     this.getTweets = this.getTweets.bind(this);
 	}
 
@@ -49,11 +50,17 @@ class App extends React.Component {
   };
 
   postTweet() {
-    axios.post('/post/tweet', { message: this.state.inputText, date: this.state.date })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err))
-    this.setState({ inputText: '', editMode: false })
-    this.getTweets();
+    if (this.state.editMode) {
+      console.log('editting!');
+      this.findOneAndUpdate();
+      this.getTweets();
+    } else {
+        axios.post('/post/tweet', { message: this.state.inputText, date: this.state.date })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err))
+      this.setState({ inputText: '', editMode: false })
+      this.getTweets();
+    }
   };
 
   getTweets() {
@@ -66,14 +73,23 @@ class App extends React.Component {
     this.setState({ date: UTCdate });
   };
 
-  editTweet(tweet) {
+  editMode({ _id, message }) {
     this.setState({ 
       editMode: true,
-      inputText: tweet.message,
-      edittedTweetID: tweet._id,
+      inputText: message,
+      edittedTweetID: _id,
       key: 1 
     });
     // if true, have some flag in <Tweet /> notifying user
+  }
+
+  findOneAndUpdate() {
+    // Update tweet in database w/ new message and date
+    let newTweet = { id: this.state.edittedTweetID, message: this.state.inputText, date: this.state.date }
+    axios.post('/update', newTweet)
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
+    this.setState({ inputText: '', editMode: false });
   }
 
   handleSelect(key) {
@@ -87,7 +103,6 @@ class App extends React.Component {
 			<div className="container">
         {isLoggedIn 
           ? (
-              // <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example">
               <Tabs activeKey={this.state.key} onSelect={this.handleSelect} animation={false} >
                 <Tab eventKey={1} title="Tweet">
                   <Tweet user={this.state.isLoggedIn}
@@ -98,11 +113,10 @@ class App extends React.Component {
                   />
                 </Tab>
                 <Tab eventKey={2} title="Queue">
-                  <Queue tweets={this.state.tweets} editTweet={this.editTweet} />
+                  <Queue tweets={this.state.tweets} editMode={this.editMode} />
                 </Tab>
               </Tabs>
             )
-          
           : (<div><a href="/auth/twitter">Log In with OAuth Provider</a></div>)
         }
 			</div>

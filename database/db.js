@@ -57,11 +57,14 @@ module.exports.remove = (id) => {
   console.log('deleted from db');
 };
 
-module.exports.getOne = (id, cb) => {
-  Tweet.findById(id, (err, res) => {
-    if (err, null) return cb(err);
-    cb(null, res);
-  });
+module.exports.findAndUpdate = (id, newData, cb) => {
+  console.log(id);
+  Tweet.findByIdAndUpdate(id, newData)
+    .then(res =>  console.log('in db, findById, ', res))
+    .catch(err => console.log('in db, findById, ', err))
+
+  // User should be able to submit tweet with new message and date. 
+  // We should update the given tweet and find it with the ID. Find out what this func needs and DO IT!
 };
 
 // Get all tweets from select user

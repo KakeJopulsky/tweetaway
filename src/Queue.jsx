@@ -24,7 +24,7 @@ const Queue = (props) => {
             <td>{i}</td>
             <td>{tweet.message}</td>
             <td>{tweet.date}</td>
-            <td><Button bsStyle="warning" onClick={() => props.editTweet(tweet)}>Edit</Button></td>
+            <td><Button bsStyle="warning" onClick={() => props.editMode(tweet)}>Edit</Button></td>
             <td><Button bsStyle="danger">Delete</Button></td>
           </tr>
           ))}
