@@ -8,7 +8,7 @@ const path  = require('path');
 require('dotenv').config();
 const app = express();
 
-// middleware
+// Middleware
 app.use(bodyParser.json())
 app.use(session({
   secret: 'keyboard cat',
@@ -20,10 +20,13 @@ app.use(session({
 app.use('/', express.static(path.join(__dirname, '../dist')));
 app.listen(3000, () => console.log('Sup dogs we\'re listening on port 3000!'));
 
-// ROUTES
+////////////////////
+////// ROUTES //////
+////////////////////
+
+// Check session data to see if user is logged in
+// If so, return user info + all saved tweets
 app.get('/user', (req, res) => {
-  // Check session data to see if user is logged in
-  // If so, return al tweets from user
   if(req.session.passport) {
     let { username } = req.session.passport.user;
     getAll(username, (tweets) => {
@@ -34,7 +37,8 @@ app.get('/user', (req, res) => {
   }
 });
 
-app.post('/post/tweet', (req, res) => { // Save a tweet to db
+// Save tweet to db
+app.post('/post/tweet', (req, res) => {
   let { message, date } = req.body;
   let { username, token, tokenSecret } = req.session.passport.user;
   let newTweet = {
@@ -49,19 +53,27 @@ app.post('/post/tweet', (req, res) => { // Save a tweet to db
   res.sendStatus(200);
 });
 
-app.get('/get/tweets', (req, res) => {
-  // Returns all tweets from user
-  let { username } = req.session.passport.user;
-  getAll(username, (userTweets) => res.send(userTweets));
-});
-
+// Update already saved tweet in db
 app.post('/update', (req, res) => {
   let { id, message, date } = req.body;
   findAndUpdate(id, { message: message, date: date }, (res) => console.log(res));
   res.sendStatus(200);
-})
+});
 
-// PassportJS Authentification
+app.post('/delete/tweet', ({ body }, res) => {
+  remove(body.id, () => res.sendStatus(200));
+});
+
+// Returns all tweets from a given username
+app.get('/get/tweets', (req, res) => {
+  let { username } = req.session.passport.user;
+  getAll(username, (userTweets) => res.send(userTweets));
+});
+
+/////////////////////////////////
+// PassportJS Authentification //
+/////////////////////////////////
+
 app.use(passport.initialize());
 
 app.get('/auth/twitter',
@@ -73,6 +85,7 @@ app.get('/auth/twitter/callback',
     successRedirect: '/' }
 ));
 
+// User profile information, and OAuth tokens saved in session data
 passport.serializeUser((user, done) => {
   let { id, username, displayName, photos } = user.profile;
   let { token, tokenSecret } = user;

@@ -12,7 +12,7 @@ class App extends React.Component {
       isLoggedIn: false,
       inputText: '',
       charCount: 280,
-      date: Date.now(),
+      date: Date.now(), // If user forgets date, post immediately
       tweets: null,
       editMode: false,
       edittedTweetID: null,
@@ -21,10 +21,11 @@ class App extends React.Component {
     this.findOneAndUpdate = this.findOneAndUpdate.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.deleteTweet = this.deleteTweet.bind(this);
     this.handleDate = this.handleDate.bind(this);
     this.postTweet = this.postTweet.bind(this);
-    this.editMode = this.editMode.bind(this);
     this.getTweets = this.getTweets.bind(this);
+    this.editMode = this.editMode.bind(this);
 	}
 
 	componentDidMount() {
@@ -51,7 +52,6 @@ class App extends React.Component {
 
   postTweet() {
     if (this.state.editMode) {
-      console.log('editting!');
       this.findOneAndUpdate();
       this.getTweets();
     } else {
@@ -63,28 +63,15 @@ class App extends React.Component {
     }
   };
 
-  getTweets() {
-    axios.get('/get/tweets')
-      .then(({ data }) => this.setState({ tweets: data }))
+  // Deletes tweet and re-renders queue
+  deleteTweet({ _id }) {
+    axios.post('/delete/tweet', { id: _id })
+      .then(() => this.getTweets())
+      .catch(err => console.log(err))
   };
 
-  handleDate(date) {
-    let UTCdate = Date.parse(date._d);
-    this.setState({ date: UTCdate });
-  };
-
-  editMode({ _id, message }) {
-    this.setState({ 
-      editMode: true,
-      inputText: message,
-      edittedTweetID: _id,
-      key: 1 
-    });
-    // if true, have some flag in <Tweet /> notifying user
-  }
-
+  // Update tweet in db
   findOneAndUpdate() {
-    // Update tweet in database w/ new message and date
     let newTweet = { id: this.state.edittedTweetID, message: this.state.inputText, date: this.state.date }
     axios.post('/update', newTweet)
       .then(res => console.log(res))
@@ -92,6 +79,32 @@ class App extends React.Component {
     this.setState({ inputText: '', editMode: false });
   }
 
+  // Retreive all tweets from given user from the db
+  // Server uses session data to identify user
+  getTweets() {
+    axios.get('/get/tweets')
+      .then(({ data }) => this.setState({ tweets: data }))
+  };
+
+  // Convert date to UTC format, makes sorting easy
+  handleDate(date) {
+    let UTCdate = Date.parse(date._d);
+    this.setState({ date: UTCdate });
+  };
+
+  // Sets state for editMode
+  // Should return to false after tweet is posted
+  editMode({ _id, message }) {
+    this.setState({ 
+      editMode: true,
+      inputText: message,
+      edittedTweetID: _id,
+      key: 1 
+    });
+    // if true, have some visual flag in <Tweet /> notifying user
+  }
+
+  // Changes bootstrap tabs
   handleSelect(key) {
     this.setState({ key: key })
   }
@@ -113,7 +126,7 @@ class App extends React.Component {
                   />
                 </Tab>
                 <Tab eventKey={2} title="Queue">
-                  <Queue tweets={this.state.tweets} editMode={this.editMode} />
+                  <Queue tweets={this.state.tweets} editMode={this.editMode} deleteTweet={this.deleteTweet} />
                 </Tab>
               </Tabs>
             )

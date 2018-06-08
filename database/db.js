@@ -26,16 +26,6 @@ const tweetSchema = mongoose.Schema({
   },
 });
 
-/*
-  let test = {
-    user: 'Test',
-    message: 'Testing 123',
-    date: '12345',
-    token: '12121212121',
-    token_secret: '0000'
-  }
-*/
-
 const Tweet = mongoose.model('Tweet', tweetSchema);
 
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -43,7 +33,10 @@ db.once('open', () => {
   console.log('we\'re connected!');
 });
 
-// OPERATIONS
+//////////////////////
+// Document operations
+//////////////////////
+
 mongoose.Promise = Promise;
 
 module.exports.insert = (tweet, cb) => {
@@ -52,19 +45,17 @@ module.exports.insert = (tweet, cb) => {
     .catch(err => console.log(err))
 };
 
-module.exports.remove = (id) => {
-  Tweet.findById(id).remove().exec();
-  console.log('deleted from db');
-};
+module.exports.remove = (id, cb) => {
+  Tweet.findOneAndRemove({ _id: id })
+    .then(() => cb())
+    .catch(err => console.log(err))
+}
 
 module.exports.findAndUpdate = (id, newData, cb) => {
   console.log(id);
   Tweet.findByIdAndUpdate(id, newData)
     .then(res =>  console.log('in db, findById, ', res))
     .catch(err => console.log('in db, findById, ', err))
-
-  // User should be able to submit tweet with new message and date. 
-  // We should update the given tweet and find it with the ID. Find out what this func needs and DO IT!
 };
 
 // Get all tweets from select user
