@@ -64,3 +64,9 @@ module.exports.getAll = (username, cb) => {
     .then(tweets => cb(tweets))
     .catch(err => console.log(err))
 };
+
+module.exports.getSorted = (cb) => {
+  Tweet.find({}).sort({date: -1}).limit(5).exec()
+    .then(docs => cb(docs))
+    .catch(err => console.log(err))
+};
