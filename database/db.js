@@ -13,7 +13,7 @@ const tweetSchema = mongoose.Schema({
     required: true 
   },
   date: {
-    type: String,
+    type: Date,
     required: true 
   },
   token: {
@@ -66,7 +66,7 @@ module.exports.getAll = (username, cb) => {
 };
 
 module.exports.getSorted = (cb) => {
-  Tweet.find({}).sort({date: -1}).limit(5).exec()
+  Tweet.find({}).sort({date: -1}).limit(5).lean().exec()
     .then(docs => cb(docs))
     .catch(err => console.log(err))
 };

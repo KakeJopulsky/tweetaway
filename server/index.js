@@ -1,9 +1,11 @@
-const { insert, remove, findAndUpdate, getAll } = require('../database/db.js');
+const { insert, remove, findAndUpdate, getAll, getSorted } = require('../database/db.js');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const schedule = require('node-schedule');
 const passport = require('passport');
 const express = require('express');
+const moment = require('moment');
 const path  = require('path');
 require('dotenv').config();
 const app = express();
@@ -20,8 +22,10 @@ app.use(session({
 app.use('/', express.static(path.join(__dirname, '../dist')));
 app.listen(3000, () => console.log('Sup dogs we\'re listening on port 3000!'));
 
+let tweetQueue = [];  // Contains 5 of next tweets to he shipped
+
 ////////////////////
-////// ROUTES //////
+////// Routes //////
 ////////////////////
 
 // Check session data to see if user is logged in
@@ -103,3 +107,26 @@ passport.use(new TwitterStrategy({
   consumerSecret: process.env.CONSUMER_SECRET,
   callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
 }, (token, tokenSecret, profile , cb) => cb(null, { profile: profile, token: token, tokenSecret: tokenSecret })));
+
+///////////////////////
+///// Scheduling //////
+///////////////////////
+
+// Get 5 sorted tweets
+// Attach Cron jobs to tweet obj and push to cache
+// Repeat if most recently inserted tweet is sooner than last tweet in queue!
+const attachJobs = (tweets) => {
+  tweetQueue = tweets.map((tweet) => {
+    tweet.job = schedule.scheduleJob(tweet.date, () => { console.log('Job exectued! ..: ', this)});
+    return tweet;
+  });
+}
+
+async function updateQueue() {
+  await getSorted(tweets => attachJobs(tweets));
+}
+
+updateQueue();
+
+// On server start, grabs 5 most recent tweets and attached jobs to them
+// this should grab more tweets everytime new tweet is added?
