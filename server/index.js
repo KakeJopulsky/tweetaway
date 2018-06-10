@@ -52,8 +52,8 @@ app.post('/post/tweet', (req, res) => {
     token: token,
     token_secret: tokenSecret
   };
-  insert(newTweet, (res) => console.log(res._id));
-  //Send back res._id to client incase they edit queued tweets
+  insert(newTweet, (res) => console.log("Successfully inserted ", res._id, " into db"));
+  updateQueue();
   res.sendStatus(200);
 });
 
@@ -109,6 +109,16 @@ passport.use(new TwitterStrategy({
 }, (token, tokenSecret, profile , cb) => cb(null, { profile: profile, token: token, tokenSecret: tokenSecret })));
 
 ///////////////////////
+////// Tweeting ///////
+///////////////////////
+
+const postTweet = ({ _id, message, token, token_secret }) => {
+  // post tweet
+  // shift from queue, will be garbage collected
+  // delete from db, updateQueue
+}
+
+///////////////////////
 ///// Scheduling //////
 ///////////////////////
 
@@ -116,17 +126,16 @@ passport.use(new TwitterStrategy({
 // Attach Cron jobs to tweet obj and push to cache
 // Repeat if most recently inserted tweet is sooner than last tweet in queue!
 const attachJobs = (tweets) => {
+  console.log(tweets);
   tweetQueue = tweets.map((tweet) => {
-    tweet.job = schedule.scheduleJob(tweet.date, () => { console.log('Job exectued! ..: ', this)});
+    tweet.job = schedule.scheduleJob(tweet.date, () => postTweet(tweet));
     return tweet;
   });
 }
 
 async function updateQueue() {
-  await getSorted(tweets => attachJobs(tweets));
+  // Filter tweets if outdated
+  await getSorted(tweets => attachJobs(tweets.filter(tweet => tweet.date - Date.now() > 10000)));
 }
 
 updateQueue();
-
-// On server start, grabs 5 most recent tweets and attached jobs to them
-// this should grab more tweets everytime new tweet is added?
