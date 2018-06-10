@@ -34,7 +34,7 @@ db.once('open', () => {
 });
 
 //////////////////////
-// Document operations
+// Query operations //
 //////////////////////
 
 mongoose.Promise = Promise;

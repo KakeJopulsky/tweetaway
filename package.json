@@ -37,6 +37,7 @@
     "react-bootstrap": "^0.32.1",
     "react-datetime": "^2.14.0",
     "react-dom": "^16.4.0",
-    "style-loader": "^0.21.0"
+    "style-loader": "^0.21.0",
+    "twit": "^2.2.10"
   }
 }

@@ -5,8 +5,8 @@ const bodyParser = require('body-parser');
 const schedule = require('node-schedule');
 const passport = require('passport');
 const express = require('express');
-const moment = require('moment');
 const path  = require('path');
+const Twit = require('twit');
 require('dotenv').config();
 const app = express();
 
@@ -52,8 +52,7 @@ app.post('/post/tweet', (req, res) => {
     token: token,
     token_secret: tokenSecret
   };
-  insert(newTweet, (res) => console.log("Successfully inserted ", res._id, " into db"));
-  updateQueue();
+  insert(newTweet, () => updateQueue());
   res.sendStatus(200);
 });
 
@@ -109,22 +108,28 @@ passport.use(new TwitterStrategy({
 }, (token, tokenSecret, profile , cb) => cb(null, { profile: profile, token: token, tokenSecret: tokenSecret })));
 
 ///////////////////////
-////// Tweeting ///////
+///// Post Tweet //////
 ///////////////////////
 
 const postTweet = ({ _id, message, token, token_secret }) => {
-  // post tweet
-  // shift from queue, will be garbage collected
-  // delete from db, updateQueue
+  const Twitter = new Twit({
+    consumer_key:         process.env.CONSUMER_KEY,
+    consumer_secret:      process.env.CONSUMER_SECRET,
+    access_token:         token,
+    access_token_secret:  token_secret,
+  });
+
+  Twitter.post('statuses/update', { status: `${message}` }, (err, res) => {
+    if (err) return console.log('err posting: ', err);
+    tweetQueue.shift(); // to be garbage collected
+    remove(_id, () => updateQueue());
+  });
 }
 
 ///////////////////////
 ///// Scheduling //////
 ///////////////////////
 
-// Get 5 sorted tweets
-// Attach Cron jobs to tweet obj and push to cache
-// Repeat if most recently inserted tweet is sooner than last tweet in queue!
 const attachJobs = (tweets) => {
   console.log(tweets);
   tweetQueue = tweets.map((tweet) => {
@@ -138,4 +143,4 @@ async function updateQueue() {
   await getSorted(tweets => attachJobs(tweets.filter(tweet => tweet.date - Date.now() > 10000)));
 }
 
-updateQueue();
+// updateQueue();
