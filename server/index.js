@@ -59,7 +59,7 @@ app.post('/post/tweet', (req, res) => {
 // Update already saved tweet in db
 app.post('/update', (req, res) => {
   let { id, message, date } = req.body;
-  findAndUpdate(id, { message: message, date: date }, (res) => console.log(res));
+  findAndUpdate(id, { message: message, date: date }, () => updateQueue());
   res.sendStatus(200);
 });
 

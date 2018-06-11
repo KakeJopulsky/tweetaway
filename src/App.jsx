@@ -2,14 +2,14 @@ import React from 'react';
 import Tweet from './tweet.jsx';
 import Queue from './Queue.jsx';
 import axios from 'axios';
-import { Tab, Tabs, PageHeader } from 'react-bootstrap';
+import { Tab, Tabs, PageHeader, Panel } from 'react-bootstrap';
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-      isLoggedIn: true,
+      isLoggedIn: false,
       user: '',
       inputText: '',
       charCount: 280,
@@ -30,7 +30,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-    // this.isAuthenticated();
+    this.isAuthenticated();
   }
   
   isAuthenticated() {
@@ -120,7 +120,7 @@ class App extends React.Component {
             <div>
               TweetLater <small>or never</small>
             </div>
-            <a href="#">Logout</a>
+            {isLoggedIn ? (<a href="/logout">Logout</a>) : (<div></div>)}
           </div>
         </PageHeader>
 			<div className="container">
@@ -143,6 +143,7 @@ class App extends React.Component {
           : (<div><a href="/auth/twitter">Log In with OAuth Provider</a></div>)
         }
 			</div>
+      <p className="footer"> by Jake Kopulsky </p>
       </div>
 		)
 	}

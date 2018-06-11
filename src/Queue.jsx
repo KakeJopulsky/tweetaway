@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { Table, Button } from 'react-bootstrap';
 
 let editDelete = {
@@ -19,15 +20,15 @@ const Queue = (props) => {
           </tr>
         </thead>
         <tbody>
-          {/* {props.tweets.map((tweet, i) => (
+          {props.tweets.map((tweet, i) => (
             <tr>
             <td>{i}</td>
             <td>{tweet.message}</td>
-            <td>{tweet.date}</td>
+            <td>{moment(tweet.date).format("dddd, MMMM Do YYYY, h:mm:ss a")}</td>
             <td><Button bsStyle="warning" onClick={() => props.editMode(tweet)}>Edit</Button></td>
             <td><Button bsStyle="danger"  onClick={() => props.deleteTweet(tweet)}>Delete</Button></td>
           </tr>
-          ))} */}
+          ))}
         </tbody>
       </Table>
     </div>
