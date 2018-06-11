@@ -31,7 +31,7 @@ let tweetQueue = [];  // Contains 5 of next tweets to he shipped
 // Check session data to see if user is logged in
 // If so, return user info + all saved tweets
 app.get('/user', (req, res) => {
-  if(req.session.passport) {
+  if(req.session.passport && req.session.passport.user) {
     let { username } = req.session.passport.user;
     getAll(username, (tweets) => {
       res.send({ user: req.session.passport.user, tweets: tweets });
@@ -87,6 +87,11 @@ app.get('/auth/twitter/callback',
     failureRedirect: '/',
     successRedirect: '/' }
 ));
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 // User profile information, and OAuth tokens saved in session data
 passport.serializeUser((user, done) => {

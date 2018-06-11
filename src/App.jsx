@@ -2,14 +2,15 @@ import React from 'react';
 import Tweet from './tweet.jsx';
 import Queue from './Queue.jsx';
 import axios from 'axios';
-import { Tab, Tabs } from 'react-bootstrap';
+import { Tab, Tabs, PageHeader } from 'react-bootstrap';
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-      isLoggedIn: false,
+      isLoggedIn: true,
+      user: '',
       inputText: '',
       charCount: 280,
       date: Date.now(), // If user forgets date, post immediately
@@ -29,7 +30,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-    this.isAuthenticated();
+    // this.isAuthenticated();
   }
   
   isAuthenticated() {
@@ -113,16 +114,25 @@ class App extends React.Component {
     const isLoggedIn = this.state.isLoggedIn;
     
 		return (
+      <div className="wrap">
+        <PageHeader>
+          <div className="header-container">
+            <div>
+              TweetLater <small>or never</small>
+            </div>
+            <a href="#">Logout</a>
+          </div>
+        </PageHeader>
 			<div className="container">
         {isLoggedIn 
           ? (
-              <Tabs activeKey={this.state.key} onSelect={this.handleSelect} animation={false} >
+              <Tabs activeKey={this.state.key} onSelect={this.handleSelect} animation={false} id="controlled-tabs" >
                 <Tab eventKey={1} title="Tweet">
-                  <Tweet user={this.state.isLoggedIn}
-                        input={this.handleChange} 
-                        submit={this.postTweet} 
-                        textValue={this.state.inputText}
-                        handleDate={this.handleDate}
+                  <Tweet user={this.state.user}
+                         input={this.handleChange} 
+                         submit={this.postTweet} 
+                         textValue={this.state.inputText}
+                         handleDate={this.handleDate}
                   />
                 </Tab>
                 <Tab eventKey={2} title="Queue">
@@ -133,6 +143,7 @@ class App extends React.Component {
           : (<div><a href="/auth/twitter">Log In with OAuth Provider</a></div>)
         }
 			</div>
+      </div>
 		)
 	}
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Button } from 'react-bootstrap';
 
 let editDelete = {
-  'text-align': 'center'
+  'textAlign': 'center'
 }
 
 const Queue = (props) => {
@@ -19,7 +19,7 @@ const Queue = (props) => {
           </tr>
         </thead>
         <tbody>
-          {props.tweets.map((tweet, i) => (
+          {/* {props.tweets.map((tweet, i) => (
             <tr>
             <td>{i}</td>
             <td>{tweet.message}</td>
@@ -27,7 +27,7 @@ const Queue = (props) => {
             <td><Button bsStyle="warning" onClick={() => props.editMode(tweet)}>Edit</Button></td>
             <td><Button bsStyle="danger"  onClick={() => props.deleteTweet(tweet)}>Delete</Button></td>
           </tr>
-          ))}
+          ))} */}
         </tbody>
       </Table>
     </div>
