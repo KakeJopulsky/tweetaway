@@ -10,6 +10,12 @@ const Twit = require('twit');
 require('dotenv').config();
 const app = express();
 
+// const TOKEN = 'ca65c75c9bc3a4d66c18942abcea3833';
+// var mixpanel = require('mixpanel-browser');
+ 
+// mixpanel.init(TOKEN);
+// mixpanel.track("An event");
+
 // Middleware
 app.use(bodyParser.json())
 app.use(session({

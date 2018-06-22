@@ -14,10 +14,10 @@ I put this simple app together in 3 days for the sake of challenge and fun.
 
 ## Build with :
 
-> React
-> Node/Express
-> MongoDB
-> PassportJS
-> Node-scheduler
-> Bootstrap
-> Twit API
+- React
+- Node/Express
+- MongoDB
+- PassportJS
+- Node-scheduler
+- Bootstrap
+- Twit API

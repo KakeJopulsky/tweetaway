@@ -1,8 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Tweet from './tweet.jsx';
 import Queue from './Queue.jsx';
 import axios from 'axios';
-import { Tab, Tabs, PageHeader, Panel } from 'react-bootstrap';
+import { Tab, Tabs, PageHeader } from 'react-bootstrap';
+// const mixpanel = require('mixpanel-browser');
+// import MixpanelProvider from 'react-mixpanel';
 
 class App extends React.Component {
 	constructor(props) {
@@ -19,6 +22,7 @@ class App extends React.Component {
       edittedTweetID: null,
       key: 1,
     }
+
     this.findOneAndUpdate = this.findOneAndUpdate.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
@@ -30,6 +34,9 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
+    // this.context.mixpanel.track('App did mount.');
+    // mixpanel.init('ca65c75c9bc3a4d66c18942abcea3833');
+    // mixpanel.track('myevent');
     this.isAuthenticated();
   }
   
@@ -114,6 +121,7 @@ class App extends React.Component {
     const isLoggedIn = this.state.isLoggedIn;
     
 		return (
+      // <MixpanelProvider mixpanel={mixpanel}> 
       <div className="wrap">
         <PageHeader>
           <div className="header-container">
@@ -145,8 +153,13 @@ class App extends React.Component {
 			</div>
       <p className="footer"> by Jake Kopulsky </p>
       </div>
+      // </MixpanelProvider>
 		)
 	}
 }
+
+App.contextTypes = {
+  mixpanel: PropTypes.object.isRequired
+};
 
 export default App;
